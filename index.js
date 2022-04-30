@@ -12,6 +12,8 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 
+
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.mabp5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -55,7 +57,14 @@ async function run() {
 
         })
 
+        // delete item
 
+
+
+
+
+
+        // quantity update
         app.post('/inventory/:id', async (req, res) => {
             const id = req.params.id;
             const quantity = req.body.newQuantity;
