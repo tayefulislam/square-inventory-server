@@ -76,6 +76,20 @@ async function run() {
         })
 
 
+        // add new item 
+
+        app.post('/addnewitem', async (req, res) => {
+
+            const newItem = req.body;
+
+            const result = await itemsCollections.insertOne(newItem)
+            res.send(result)
+
+
+
+        })
+
+
 
 
 
