@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
+
+
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 const app = express();
@@ -86,6 +88,18 @@ async function run() {
 
 
         })
+
+        app.get('/item/:trackid', async (req, res) => {
+            const trackId = req.params.trackid
+            const query = { trackId: trackId }
+
+            const result = await itemsCollections.findOne(query)
+            res.send(result)
+            console.log(trackId)
+        })
+
+
+
 
         // delete item
 
