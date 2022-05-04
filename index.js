@@ -93,9 +93,20 @@ async function run() {
             const trackId = req.params.trackid
             const query = { trackId: trackId }
 
+
             const result = await itemsCollections.findOne(query)
-            res.send(result)
-            console.log(trackId)
+
+            if (result) {
+                res.send(result)
+            }
+            else {
+
+                res.send([])
+
+            }
+
+
+            console.log(result)
         })
 
 
