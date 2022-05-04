@@ -27,9 +27,6 @@ async function run() {
         const itemsCollections = client.db("squareInventory").collection('items');
 
 
-
-
-
         let cursor;
         let result;
 
@@ -133,6 +130,7 @@ async function run() {
         app.post('/inventory/:id', async (req, res) => {
             const id = req.params.id;
             const quantity = req.body.newQuantity;
+            const sold = req.body.newSold;
             console.log(quantity)
 
             const filter = { _id: ObjectId(id) }
@@ -140,7 +138,8 @@ async function run() {
             const updateDoc = {
                 $set: {
 
-                    quantity: quantity
+                    quantity: quantity,
+                    sold: sold
 
                 }
 
@@ -149,6 +148,7 @@ async function run() {
             const result = await itemsCollections.updateOne(filter, updateDoc, options)
 
             console.log(quantity)
+            console.log(sold)
 
             res.send(result)
 
