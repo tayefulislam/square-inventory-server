@@ -129,9 +129,14 @@ async function run() {
         // quantity update
         app.post('/inventory/:id', async (req, res) => {
             const id = req.params.id;
+
             const quantity = req.body.newQuantity;
+
             const sold = req.body.newSold;
-            console.log(quantity)
+
+
+
+            // console.log(sold, 'line 139')
 
             const filter = { _id: ObjectId(id) }
             const options = { upsert: true };
@@ -147,8 +152,8 @@ async function run() {
 
             const result = await itemsCollections.updateOne(filter, updateDoc, options)
 
-            console.log(quantity)
-            console.log(sold)
+            // console.log(quantity)
+            // console.log(sold)
 
             res.send(result)
 
