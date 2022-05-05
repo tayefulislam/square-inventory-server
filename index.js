@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
 
+const jwt = require('jsonwebtoken');
+
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
@@ -27,6 +29,20 @@ async function run() {
         await client.connect();
 
         const itemsCollections = client.db("squareInventory").collection('items');
+
+
+
+        app.post('/login', async (req, res) => {
+
+            const email = req.body;
+
+            const acceseToken = jwt.sign(email, process.env.Secret_Access_Token, {
+                expiresIn: '1d'
+            })
+
+            res.send({ acceseToken })
+            console.log(email)
+        })
 
 
         let cursor;
