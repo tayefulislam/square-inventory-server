@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
 const port = process.env.PORT || 5000;
 const app = express();
 
@@ -15,6 +16,41 @@ const app = express();
 
 app.use(cors())
 app.use(express.json())
+
+
+function verifyJWT(req, res, next) {
+
+    const authHeader = req.headers.authorization;
+
+
+    if (!authHeader) {
+
+        return res.status(401).send({ message: 'unauthrized access' })
+    }
+
+
+    const token = authHeader.split(' ')[1]
+
+    jwt.verify(token, process.env.Secret_Access_Token, (err, decoded) => {
+
+        if (err) {
+
+            return res.status(403).send({ message: 'Forbiden' })
+        }
+
+
+
+        req.decoded = decoded;
+
+        next()
+
+
+    })
+
+
+
+
+}
 
 
 
@@ -47,67 +83,49 @@ async function run() {
         })
 
 
+
+
+
         let cursor;
         let result;
 
-        app.get('/items', async (req, res, next) => {
+        app.get('/items', async (req, res) => {
+
+            const query = {};
+
+            cursor = itemsCollections.find(query);
+
+            result = await cursor.toArray()
+
+            return res.send(result);
+
+
+        })
+
+
+
+        app.get('/itemlist', verifyJWT, async (req, res) => {
 
             const email = req.query.email;
-            // req auth header get token
-            const authHeader = req.headers.authorization;
+            const emailDecoded = req.decoded?.email;
 
+            console.log(emailDecoded)
 
-            console.log(authHeader)
+            if (email === emailDecoded) {
 
-            if (email) {
-
-
-                if (authHeader) {
-
-                    const query = { email: email };
-
-                    cursor = itemsCollections.find(query);
-
-                    result = await cursor.toArray()
-
-                    res.send(result);
-
-                    return;
-
-
-
-
-
-                }
-
-                else {
-
-                    return res.status(401).send({ message: 'unauthorized access' });
-                }
-
-
-
-
-
-
-            }
-
-            else {
-
-                const query = {};
+                const query = { email: email };
 
                 cursor = itemsCollections.find(query);
 
                 result = await cursor.toArray()
 
                 res.send(result);
-
-
-
-
             }
 
-            console.log(email)
+
+            else {
+                res.status(403).send({ message: 'forbiden' })
+            }
 
 
 
