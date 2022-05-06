@@ -18,6 +18,8 @@ app.use(express.json())
 
 
 
+
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.mabp5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -48,21 +50,44 @@ async function run() {
         let cursor;
         let result;
 
-        app.get('/items', async (req, res) => {
+        app.get('/items', async (req, res, next) => {
 
             const email = req.query.email;
+            // req auth header get token
+            const authHeader = req.headers.authorization;
+
+
+            console.log(authHeader)
 
             if (email) {
 
-                const query = { email: email };
 
-                cursor = itemsCollections.find(query);
+                if (authHeader) {
 
-                result = await cursor.toArray()
+                    const query = { email: email };
 
-                res.send(result);
+                    cursor = itemsCollections.find(query);
 
-                return;
+                    result = await cursor.toArray()
+
+                    res.send(result);
+
+                    return;
+
+
+
+
+
+                }
+
+                else {
+
+                    return res.status(401).send({ message: 'unauthorized access' });
+                }
+
+
+
+
 
 
             }
