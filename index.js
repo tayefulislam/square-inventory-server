@@ -37,9 +37,6 @@ function verifyJWT(req, res, next) {
 
             return res.status(403).send({ message: 'Forbiden' })
         }
-
-
-
         req.decoded = decoded;
 
         next()
@@ -79,7 +76,7 @@ async function run() {
             })
 
             res.send({ acceseToken })
-            console.log(email)
+            // console.log(email)
         })
 
 
@@ -143,7 +140,7 @@ async function run() {
             const result = await itemsCollections.findOne(query)
 
             res.send(result)
-            console.log(id)
+            // console.log(id)
 
 
         })
@@ -165,7 +162,7 @@ async function run() {
             }
 
 
-            console.log(result)
+            // console.log(result)
         })
 
 
@@ -178,7 +175,7 @@ async function run() {
 
             const query = { _id: ObjectId(id) }
 
-            console.log(id)
+            // console.log(id)
 
             const result = await itemsCollections.deleteOne(query)
 
@@ -242,6 +239,38 @@ async function run() {
             res.send(result)
 
         })
+
+
+
+        // update a item 
+
+
+        app.post('/update/:id', async (req, res) => {
+
+            const id = req.params.id;
+
+            const updatedItem = req.body;
+
+            const filter = { _id: ObjectId(id) }
+
+            const options = { upsert: true };
+
+
+            // console.log(id, updatedItem)
+
+            const updatedDoc = {
+                $set: updatedItem
+            }
+
+
+            const result = await itemsCollections.updateOne(filter, updatedDoc, options)
+
+            res.send(result)
+
+
+        })
+
+
 
 
 
