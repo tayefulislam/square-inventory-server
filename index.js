@@ -18,6 +18,8 @@ app.use(cors())
 app.use(express.json())
 
 
+
+// verify jwt email 
 function verifyJWT(req, res, next) {
 
     const authHeader = req.headers.authorization;
@@ -65,7 +67,7 @@ async function run() {
 
         const itemsCollections = client.db("squareInventory").collection('items');
 
-
+        // recive jwt token
 
         app.post('/login', async (req, res) => {
 
@@ -82,7 +84,7 @@ async function run() {
 
 
 
-
+        // get all item
         let cursor;
         let result;
 
@@ -99,7 +101,7 @@ async function run() {
 
         })
 
-
+        // get all item based on email
 
         app.get('/itemlist', verifyJWT, async (req, res) => {
 
@@ -130,7 +132,7 @@ async function run() {
         })
 
 
-
+        // get item based on id
 
         app.get('/inventory/:id', async (req, res) => {
             const id = req.params.id
@@ -144,6 +146,8 @@ async function run() {
 
 
         })
+
+        // track item by track id
 
         app.get('/item/:trackid', async (req, res) => {
             const trackId = req.params.trackid
